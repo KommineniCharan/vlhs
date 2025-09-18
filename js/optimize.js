@@ -15,7 +15,7 @@ const imageminAvif = require("imagemin-avif");
 const imageminMozjpeg = require("imagemin-mozjpeg");
 const imageminPngquant = require("imagemin-pngquant");
 
-const SRC_DIR = "emnar-pharma";
+const SRC_DIR = "vlhs";
 const OUT_DIR = "optimized";
 const IMG_WIDTHS = [320, 640, 1024];
 
@@ -80,7 +80,7 @@ async function minifyJsFiles() {
 }
 
 async function optimizeImages() {
-  const imgFiles = glob.sync(`${OUT_DIR}/images/**/*.{png,jpg,jpeg}`, {
+  const imgFiles = glob.sync(`${OUT_DIR}/img/**/*.{png,jpg,jpeg}`, {
     nodir: true,
   });
   await Promise.all(

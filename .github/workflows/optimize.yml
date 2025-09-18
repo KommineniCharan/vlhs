@@ -43,8 +43,10 @@ jobs:
       - name: Purge unused CSS
         run: |
           cd optimized
-          if [ -d css ]; then
-            find css -iname "*.css" | while read -r file; do
+          # Find any directory named "css" (case-insensitive) and loop through them
+          find . -type d -iname "css" | while read -r cssDir; do
+            echo "Found CSS directory: $cssDir"
+            find "$cssDir" -type f -iname "*.css" | while read -r file; do
               echo "Purging CSS: $file"
               purgecss \
                 --css "$file" \
@@ -52,27 +54,34 @@ jobs:
                 --output "$(dirname "$file")" \
                 --rejected
             done
-          fi
+          done
 
       - name: Minify CSS
         run: |
           cd optimized
-          if [ -d css ]; then
-            find css -iname "*.css" | while read -r file; do
+          # Find any directory named "css" (case-insensitive)
+          find . -type d -iname "css" | while read -r cssDir; do
+            echo "Found CSS directory: $cssDir"
+            find "$cssDir" -type f -iname "*.css" | while read -r file; do
               echo "Minifying CSS: $file"
               cleancss --output "$file" "$file"
             done
-          fi
+          done
 
       - name: Minify JavaScript
         run: |
           cd optimized
-          if [ -d js ]; then
-            find js -iname "*.js" | while read -r file; do
+          # Find any directory named "js" (case-insensitive)
+          find . -type d -iname "js" | while read -r jsDir; do
+            echo "Found JS directory: $jsDir"
+            find "$jsDir" -type f -iname "*.js" | while read -r file; do
               echo "Minifying JS: $file"
-              terser "$file" --compress drop_console=true,drop_debugger=true --mangle --output "$file"
+              terser "$file" \
+                --compress drop_console=true,drop_debugger=true \
+                --mangle \
+                --output "$file"
             done
-          fi
+          done
 
       - name: Generate Responsive Images
         run: node js/resize-images.js
@@ -133,7 +142,15 @@ jobs:
 
       - name: Gzip CSS and JS assets
         run: |
-          find optimized/css optimized/js -type f \( -iname "*.css" -o -iname "*.js" \) -exec gzip -kf {} \;
+          cd optimized
+          # Find all css and js directories
+          find . -type d \( -iname "css" -o -iname "js" \) | while read -r dir; do
+            echo "Found assets directory: $dir"
+            find "$dir" -type f \( -iname "*.css" -o -iname "*.js" \) | while read -r file; do
+              echo "Gzipping: $file"
+              gzip -kf "$file"
+            done
+          done
 
       - name: Create optimization report
         run: |

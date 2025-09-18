@@ -10,7 +10,7 @@ const projectRoot = path.resolve(".");
 
 // Find all images inside any `images` folder in the project
 glob
-  .sync("**/images/**/*.{jpg,jpeg,png}", {
+  .sync("**/img/**/*.{jpg,jpeg,png}", {
     cwd: projectRoot,
     nodir: true,
     absolute: false, // keep relative for output naming

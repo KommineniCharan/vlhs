@@ -127,10 +127,10 @@ function main() {
 
       // Strategy 1: direct path under images/
       let candidateAbs = null;
-      if (normalizedRef.includes('images/')) {
+      if (normalizedRef.includes('img/')) {
         // Strip possible leading / or ./
         let rel = normalizedRef.replace(/^\.{0,2}\//, '');
-        const idx = rel.indexOf('images/');
+        const idx = rel.indexOf('img/');
         if (idx >= 0) {
           rel = rel.slice(idx); // start at images/
         }
